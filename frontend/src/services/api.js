@@ -1,6 +1,15 @@
-// Gunakan import.meta.env.VITE_API_URL jika diset, atau fallback ke VITE_API_BASE_URL / default "/api"
-const rawBaseUrl = import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BASE_URL || "/api";
-const API_BASE_URL = rawBaseUrl.endsWith("/") ? rawBaseUrl.slice(0, -1) : rawBaseUrl;
+// Base API URL configuration
+// Robust fallback ensures requests don't hit frontend domain when VITE_API_URL is missing
+const envUrl = import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BASE_URL;
+let BASE_URL = envUrl || "http://localhost:5000/api";
+
+// Trim trailing slashes
+BASE_URL = BASE_URL.replace(/\/+$/, "");
+
+// Ensure BASE_URL includes /api endpoint prefix if user only provided origin domain
+if (!BASE_URL.endsWith("/api")) {
+  BASE_URL = `${BASE_URL}/api`;
+}
 
 /**
  * Fetch letter details by tracking number / ID
@@ -8,7 +17,7 @@ const API_BASE_URL = rawBaseUrl.endsWith("/") ? rawBaseUrl.slice(0, -1) : rawBas
  */
 export async function getLetterByTrackingId(id) {
   try {
-    const res = await fetch(`${API_BASE_URL}/letters/${encodeURIComponent(id)}`);
+    const res = await fetch(`${BASE_URL}/letters/${encodeURIComponent(id)}`);
     const data = await res.json();
     return data;
   } catch (error) {
@@ -25,7 +34,7 @@ export async function getLetterByTrackingId(id) {
  */
 export async function getAllLetters() {
   try {
-    const res = await fetch(`${API_BASE_URL}/letters`);
+    const res = await fetch(`${BASE_URL}/letters`);
     const data = await res.json();
     return data;
   } catch (error) {
@@ -44,7 +53,7 @@ export async function getAllLetters() {
  */
 export async function submitLetter(letterData) {
   try {
-    const res = await fetch(`${API_BASE_URL}/letters`, {
+    const res = await fetch(`${BASE_URL}/letters`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -69,7 +78,7 @@ export async function submitLetter(letterData) {
  */
 export async function approveLetterTTE(id, payload = {}) {
   try {
-    const res = await fetch(`${API_BASE_URL}/letters/${encodeURIComponent(id)}/approve`, {
+    const res = await fetch(`${BASE_URL}/letters/${encodeURIComponent(id)}/approve`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
