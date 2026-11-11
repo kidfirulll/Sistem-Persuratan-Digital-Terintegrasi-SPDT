@@ -70,11 +70,19 @@ app.get("*", (req, res) => {
   res.sendFile(path.join(frontendDistPath, "index.html"));
 });
 
-// Start Server (listening on 0.0.0.0 agar bisa diakses Tailscale dan LAN)
-app.listen(PORT, "0.0.0.0", () => {
-  console.log(`===============================================`);
-  console.log(` SPDT Full-Stack Server is running on port ${PORT}`);
-  console.log(` Local URL     : http://localhost:${PORT}`);
-  console.log(` Tailscale URL : http://100.90.63.47:${PORT}`);
-  console.log(`===============================================`);
-});
+// Start Server only in local dev (listening on 0.0.0.0 agar bisa diakses Tailscale dan LAN)
+if (process.env.NODE_ENV !== "production" && !process.env.VERCEL) {
+  app.listen(PORT, "0.0.0.0", () => {
+    console.log(`===============================================`);
+    console.log(` SPDT Full-Stack Server is running on port ${PORT}`);
+    console.log(` Local URL     : http://localhost:${PORT}`);
+    console.log(` Tailscale URL : http://100.90.63.47:${PORT}`);
+    console.log(`===============================================`);
+  });
+}
+
+// Export app for Vercel Serverless Function & testing
+export default app;
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = app;
+}
