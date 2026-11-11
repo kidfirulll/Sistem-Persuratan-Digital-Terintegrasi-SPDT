@@ -1,268 +1,257 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { 
-  FileText, 
-  Search, 
-  ShieldCheck, 
-  Users, 
-  Clock, 
-  CheckCircle, 
   ArrowRight,
-  ChevronRight,
-  Briefcase,
-  Home,
-  FileBadge,
-  HeartHandshake,
-  Baby,
-  MapPin,
-  Sparkles
+  ChevronDown,
+  User,
+  Users,
+  Shield,
+  ShieldCheck,
+  Stamp,
+  FileCheck2,
+  ArrowUpRight
 } from "lucide-react";
 import TrackingWidget from "../components/TrackingWidget";
+import Footer from "../components/Footer";
 
 export default function LandingPage() {
-  const features = [
+  const processSteps = [
     {
-      title: "Praktis & Cepat",
-      desc: "Ajukan permohonan surat dari smartphone tanpa antre di balai desa.",
-      icon: Clock,
-      badge: "Mandiri",
-      color: "bg-blue-600 text-white"
+      num: "01",
+      role: "Warga / Pemohon",
+      title: "Pengajuan Mandiri Secara Daring",
+      desc: "Warga mengisi formulir surat, melampirkan 16 digit NIK terdaftar, serta menentukan tujuan keperluan surat langsung dari rumah tanpa antre.",
+      icon: User
     },
     {
-      title: "Transparan & Terlacak",
-      desc: "Pantau posisi berkas secara real-time dengan nomor resi berjenjang.",
-      icon: Search,
-      badge: "Real-Time",
-      color: "bg-slate-900 text-blue-400"
+      num: "02",
+      role: "Ketua RT",
+      title: "Pemeriksaan & Pengantar RT",
+      desc: "Ketua RT meninjau keabsahan domisili pemohon di lingkungannya dan memberikan paraf digital pengantar pengajuan.",
+      icon: Users
     },
     {
-      title: "TTE Berjenjang Resmi",
-      desc: "Validasi aman berjenjang dengan tanda tangan elektronik sah.",
-      icon: ShieldCheck,
-      badge: "Hukum Sah",
-      color: "bg-blue-600 text-white"
+      num: "03",
+      role: "Ketua RW",
+      title: "Validasi Kewilayahan RW",
+      desc: "Ketua RW memvalidasi berkas administratif tingkat rukun warga sebelum dokumen diteruskan ke tingkatan pedukuhan.",
+      icon: Shield
     },
     {
-      title: "Akun Pendamping",
-      desc: "Dukungan ramah lansia didampingi keluarga atau RT setempat.",
-      icon: Users,
-      badge: "Inklusif",
-      color: "bg-slate-900 text-blue-400"
-    }
-  ];
-
-  const letterCatalogs = [
-    {
-      name: "Surat Keterangan Usaha (SKU)",
-      desc: "Persyaratan pinjaman KUR perbankan, izin usaha mikro, atau bantuan UMKM.",
-      icon: Briefcase,
-      tag: "Paling Banyak",
-      tagColor: "bg-blue-100 text-blue-800"
+      num: "04",
+      role: "Kepala Dusun",
+      title: "Audit Administratif Dusun",
+      desc: "Kepala Dusun (Kasun) memeriksa kelengkapan arsip dan menyetujui rekomendasi berkas warga wilayah pedukuhannya.",
+      icon: ShieldCheck
     },
     {
-      name: "Surat Keterangan Domisili",
-      desc: "Bukti tempat tinggal resmi bagi warga tetap maupun warga pendatang.",
-      icon: Home,
-      tag: "Populer",
-      tagColor: "bg-slate-100 text-slate-800"
+      num: "05",
+      role: "Kepala Desa",
+      title: "Otorisasi & TTE Kades",
+      desc: "Kepala Desa membubuhkan Tanda Tangan Elektronik (TTE) resmi bersertifikat BSrE yang berkekuatan hukum setara tanda tangan basah.",
+      icon: Stamp
     },
     {
-      name: "Surat Pengantar SKCK",
-      desc: "Pengantar penerbitan catatan kepolisian di tingkat Polsek / Polres.",
-      icon: FileBadge,
-      tag: "Administrasi",
-      tagColor: "bg-blue-50 text-blue-700"
-    },
-    {
-      name: "Surat Ket. Tidak Mampu (SKTM)",
-      desc: "Pengurusan beasiswa anak sekolah, KIP Kuliah, dan bantuan BPJS/Sosial.",
-      icon: HeartHandshake,
-      tag: "Bantuan Sosial",
-      tagColor: "bg-emerald-50 text-emerald-800"
-    },
-    {
-      name: "Surat Kelahiran / Kematian",
-      desc: "Pencatatan peristiwa vital kependudukan untuk KK dan Akta.",
-      icon: Baby,
-      tag: "Kependudukan",
-      tagColor: "bg-slate-100 text-slate-800"
-    },
-    {
-      name: "Surat Pindah Domisili",
-      desc: "Pengantar resmi kepindahan warga antar RT, RW, desa, atau ke luar daerah.",
-      icon: MapPin,
-      tag: "Kependudukan",
-      tagColor: "bg-blue-100 text-blue-800"
+      num: "06",
+      role: "Dokumen Resmi Terbit",
+      title: "Surat Sah Siap Diunduh & Ber-QR",
+      desc: "Surat resmi selesai diproses. Warga dapat mengunduh format PDF sah yang dilengkapi kode QR verifikasi keaslian dokumen.",
+      icon: FileCheck2
     }
   ];
 
   return (
-    <div className="space-y-8 sm:space-y-14 py-4 sm:py-8">
-      {/* Mobile-First Hero Section */}
-      <section className="max-w-4xl mx-auto px-4 text-center">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-100 text-blue-800 text-[11px] sm:text-xs font-bold border border-blue-200 mb-3 shadow-2xs">
-          <Sparkles className="w-3.5 h-3.5 text-blue-600" />
-          <span>Transformasi Pelayanan Warga Desa</span>
-        </div>
+    <div className="w-full bg-black text-white selection:bg-[#800020] selection:text-white">
+      {/* SECTION 1: Hero Presentation */}
+      <section className="min-h-[calc(100vh-5rem)] flex flex-col justify-center items-center relative overflow-hidden bg-black text-white px-4 sm:px-8 py-16">
+        {/* Subtle Burgundy Dark Gradient Glow Accent */}
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[650px] h-[400px] bg-[#800020]/25 blur-[150px] pointer-events-none rounded-full" />
 
-        <h1 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 tracking-tight leading-tight">
-          Urus Surat Desa <br />
-          <span className="text-blue-600">Tanpa Bolak-Balik</span>
-        </h1>
+        <div className="max-w-4xl mx-auto text-center relative z-10 flex flex-col items-center">
+          {/* Headline Typography */}
+          <h1 className="text-4xl xs:text-5xl sm:text-6xl md:text-7xl font-black text-white tracking-tight leading-[1.08] mb-6">
+            Urus Surat Desa <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-rose-100 to-rose-400">
+              Tanpa Bolak-Balik.
+            </span>
+          </h1>
 
-        <p className="text-xs sm:text-base text-slate-600 font-normal leading-relaxed mt-2.5 sm:mt-3.5 max-w-lg mx-auto">
-          Layanan persuratan warga praktis, transparan, dan terverifikasi berjenjang dari RT hingga Kepala Desa secara digital.
-        </p>
+          {/* High-end Value Subtext */}
+          <p className="text-base sm:text-lg text-white/70 font-normal leading-relaxed max-w-2xl mx-auto mb-10">
+            Platform persuratan digital terpadu untuk warga desa. Pengajuan instan dari genggaman, verifikasi berjenjang transparan, dan bertanda tangan elektronik sah.
+          </p>
 
-        {/* Action Buttons - Stacked on mobile, side-by-side on sm+ */}
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-2 sm:gap-3 mt-5">
-          <Link
-            to="/dashboard"
-            className="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-bold text-xs sm:text-sm px-5 py-3 rounded-xl shadow-xs transition"
-          >
-            <span>Ajukan Surat Sekarang</span>
-            <ArrowRight className="w-4 h-4" />
-          </Link>
-          <a
-            href="#tracking"
-            className="inline-flex items-center justify-center gap-2 bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs sm:text-sm px-4 py-3 rounded-xl shadow-xs transition"
-          >
-            <Search className="w-4 h-4 text-blue-400" />
-            <span>Lacak Status Resi</span>
-          </a>
-        </div>
+          {/* Call to Action Buttons */}
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-4 w-full sm:w-auto">
+            <Link
+              to="/portal-warga"
+              className="group inline-flex items-center justify-center gap-3 bg-[#800020] hover:bg-[#9b1b3b] active:scale-95 text-white font-extrabold text-sm sm:text-base px-8 py-4 rounded-2xl border border-rose-500/30 shadow-2xl shadow-[#800020]/50 hover:shadow-[#800020]/80 transition-all duration-300"
+            >
+              <span>Ajukan Surat Sekarang</span>
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1.5 transition-transform" />
+            </Link>
 
-        {/* Value Micro-Points */}
-        <div className="flex flex-wrap justify-center items-center gap-3 sm:gap-5 text-[11px] sm:text-xs text-slate-500 mt-5 pt-3.5 border-t border-slate-200">
-          <span className="flex items-center gap-1">
-            <CheckCircle className="w-3.5 h-3.5 text-blue-600" /> Gratis tanpa biaya
-          </span>
-          <span className="flex items-center gap-1">
-            <CheckCircle className="w-3.5 h-3.5 text-blue-600" /> Dokumen sah ber-TTE
-          </span>
-          <span className="flex items-center gap-1">
-            <CheckCircle className="w-3.5 h-3.5 text-blue-600" /> Layanan online 24 jam
-          </span>
+            <a
+              href="#tracking"
+              className="inline-flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 active:scale-95 text-white font-bold text-sm sm:text-base px-7 py-4 rounded-2xl border border-white/15 backdrop-blur-md transition-all duration-300"
+            >
+              <span>Lacak Nomor Resi</span>
+              <ChevronDown className="w-4 h-4 text-white/60" />
+            </a>
+          </div>
+
+          {/* Value Points */}
+          <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-10 mt-14 text-xs sm:text-sm text-white/60 border-t border-white/10 pt-6">
+            <span>100% Bebas Biaya</span>
+            <span>•</span>
+            <span>TTE Berstandar Resmi BSrE</span>
+            <span>•</span>
+            <span>Akses Daring 24 Jam</span>
+          </div>
         </div>
       </section>
 
-      {/* Interactive Tracking Section */}
-      <section id="tracking" className="max-w-4xl mx-auto px-3.5 sm:px-4">
+      {/* SECTION 2: Standalone Tracking Widget */}
+      <section
+        id="tracking"
+        className="min-h-screen flex flex-col justify-center items-center bg-white text-black relative px-4 sm:px-8 py-16 border-t border-black/10"
+      >
         <TrackingWidget />
       </section>
 
-      {/* 4 Feature Cards (2 cols on mobile, 4 cols on lg) */}
-      <section className="max-w-5xl mx-auto px-3.5 sm:px-4">
-        <div className="text-center mb-4 sm:mb-6">
-          <span className="text-[11px] font-bold text-blue-600 uppercase tracking-wider">
-            Standar Pelayanan
-          </span>
-          <h2 className="text-lg sm:text-2xl font-bold text-slate-900 tracking-tight mt-0.5">
-            Keunggulan Sistem SPDT
-          </h2>
-          <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
-            Mudah digunakan lewat HP oleh seluruh warga desa.
-          </p>
-        </div>
+      {/* SECTION 3: ZIG-ZAG ROADMAP ALUR LAYANAN */}
+      <section
+        id="workflow"
+        className="flex flex-col justify-center items-center bg-black text-white relative px-4 sm:px-8 py-20 sm:py-28 border-t border-white/10 overflow-hidden"
+      >
+        {/* Subtle Ambient Glow */}
+        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[700px] h-[500px] bg-[#800020]/15 blur-[160px] pointer-events-none rounded-full" />
 
-        <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3.5">
-          {features.map((item, index) => {
-            const Icon = item.icon;
-            return (
-              <div
-                key={index}
-                className="bg-white rounded-xl sm:rounded-2xl p-3.5 sm:p-4 border border-slate-200 shadow-2xs hover:border-blue-300 transition flex flex-col justify-between"
-              >
-                <div>
-                  <div className="flex items-center justify-between mb-2.5">
-                    <div className={`w-8 h-8 rounded-lg ${item.color} flex items-center justify-center shadow-2xs`}>
-                      <Icon className="w-4 h-4" />
-                    </div>
-                    <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200">
-                      {item.badge}
-                    </span>
-                  </div>
-                  <h3 className="text-xs sm:text-sm font-bold text-slate-900 mb-0.5">
-                    {item.title}
-                  </h3>
-                  <p className="text-[11px] sm:text-xs text-slate-500 leading-relaxed">
-                    {item.desc}
-                  </p>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* Katalog Layanan Surat with Navy Header Banner & Mobile Carousel/Grid */}
-      <section className="max-w-5xl mx-auto px-3.5 sm:px-4">
-        <div className="bg-white rounded-2xl sm:rounded-3xl border border-slate-200 overflow-hidden shadow-xs">
-          {/* Section Header with Navy styling */}
-          <div className="bg-slate-900 text-white p-4 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div>
-              <div className="flex items-center gap-1.5 text-blue-400 text-[10px] sm:text-xs font-bold uppercase tracking-wider">
-                <FileText className="w-3.5 h-3.5" />
-                <span>Katalog Layanan Surat Desa</span>
-              </div>
-              <h2 className="text-base sm:text-xl font-bold text-white tracking-tight mt-0.5">
-                Pilih Kebutuhan Surat Warga
-              </h2>
-              <p className="text-xs text-slate-300 mt-0.5">
-                Dapat diajukan langsung secara mandiri atau dengan bantuan RT.
-              </p>
-            </div>
-
-            <Link
-              to="/dashboard"
-              className="inline-flex items-center justify-center gap-1.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold px-3.5 py-2 rounded-xl transition shadow-2xs shrink-0 self-start sm:self-auto"
-            >
-              <span>Ajukan Sekarang</span>
-              <ChevronRight className="w-3.5 h-3.5" />
-            </Link>
+        <div className="max-w-5xl w-full mx-auto relative z-10 space-y-16">
+          {/* Header Section */}
+          <div className="text-center max-w-2xl mx-auto space-y-3">
+            <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight">
+              Roadmap Alur Persuratan
+            </h2>
+            <p className="text-sm sm:text-base text-white/60 leading-relaxed">
+              Tahapan berjenjang terpadu dari pengajuan mandiri warga hingga terbitnya dokumen resmi berkekuatan hukum tetap.
+            </p>
           </div>
 
-          {/* Catalog Grid */}
-          <div className="p-3.5 sm:p-6 bg-slate-50/50">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-3.5">
-              {letterCatalogs.map((item, i) => {
-                const Icon = item.icon;
+          {/* ROADMAP TIMELINE (ZIG-ZAG ROAD LAYOUT) */}
+          <div className="relative">
+            {/* The Central Connecting Road Line (Desktop Center / Mobile Left) */}
+            <div className="absolute left-6 md:left-1/2 top-4 bottom-4 w-1 -translate-x-1/2 bg-gradient-to-b from-[#800020] via-rose-700/60 to-[#800020] shadow-[0_0_15px_rgba(128,0,32,0.6)]" />
+
+            <div className="space-y-10 sm:space-y-12">
+              {processSteps.map((step, idx) => {
+                const IconComp = step.icon;
+                const isEven = idx % 2 === 0; // Even: card on left on desktop, Odd: card on right
+
                 return (
                   <div
-                    key={i}
-                    className="bg-white group p-3.5 sm:p-4 rounded-xl border border-slate-200 hover:border-blue-400 hover:shadow-2xs transition flex flex-col justify-between"
+                    key={idx}
+                    className="relative flex items-center md:justify-between group"
                   >
-                    <div>
-                      <div className="flex items-center justify-between mb-2">
-                        <div className="w-7 h-7 rounded-lg bg-blue-50 text-blue-600 group-hover:bg-slate-900 group-hover:text-blue-400 flex items-center justify-center transition">
-                          <Icon className="w-3.5 h-3.5" />
-                        </div>
-                        <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${item.tagColor}`}>
-                          {item.tag}
-                        </span>
-                      </div>
-                      <h3 className="text-xs sm:text-sm font-bold text-slate-900 group-hover:text-blue-600 transition">
-                        {item.name}
-                      </h3>
-                      <p className="text-[11px] sm:text-xs text-slate-500 mt-0.5 leading-relaxed line-clamp-2">
-                        {item.desc}
-                      </p>
+                    {/* Road Center Node Point */}
+                    <div className="absolute left-6 md:left-1/2 -translate-x-1/2 w-11 h-11 rounded-full bg-[#0d0d0d] border-2 border-[#800020] group-hover:border-rose-400 group-hover:scale-110 flex items-center justify-center text-white z-20 shadow-xl shadow-[#800020]/40 transition-all duration-300">
+                      <span className="font-mono text-xs font-black text-rose-300">
+                        {step.num}
+                      </span>
                     </div>
 
-                    <Link
-                      to="/dashboard"
-                      className="inline-flex items-center gap-1 text-[11px] sm:text-xs font-bold text-blue-600 hover:text-blue-800 mt-2.5 pt-2 border-t border-slate-100"
+                    {/* Zig-Zag Content Columns */}
+                    {/* Left Column (Desktop) */}
+                    <div
+                      className={`w-full pl-16 md:pl-0 md:w-[44%] ${
+                        isEven ? "md:mr-auto" : "md:invisible md:h-0"
+                      }`}
                     >
-                      <span>Ajukan surat ini</span>
-                      <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition" />
-                    </Link>
+                      {isEven && (
+                        <div className="bg-[#0e0e0e] hover:bg-[#141414] border border-white/10 hover:border-[#800020] rounded-2xl p-5 sm:p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-[#800020]/25 relative">
+                          {/* Desktop Arrow Pointer towards center */}
+                          <div className="hidden md:block absolute top-1/2 -right-2.5 -translate-y-1/2 w-5 h-5 bg-[#0e0e0e] border-t border-r border-white/10 rotate-45" />
+
+                          <div className="flex items-start gap-4">
+                            <div className="w-11 h-11 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-rose-300 group-hover:bg-[#800020] group-hover:text-white transition-colors shrink-0">
+                              <IconComp className="w-5 h-5" />
+                            </div>
+
+                            <div className="space-y-1.5 flex-1">
+                              <span className="text-[11px] font-black uppercase tracking-wider text-rose-400 block">
+                                {step.role}
+                              </span>
+                              <h3 className="text-base sm:text-lg font-bold text-white group-hover:text-rose-100 transition-colors">
+                                {step.title}
+                              </h3>
+                              <p className="text-xs sm:text-sm text-white/60 leading-relaxed pt-0.5">
+                                {step.desc}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Right Column (Desktop & Mobile Default) */}
+                    <div
+                      className={`w-full pl-16 md:pl-0 md:w-[44%] ${
+                        !isEven ? "md:ml-auto" : "hidden md:block md:invisible md:h-0"
+                      }`}
+                    >
+                      {!isEven && (
+                        <div className="bg-[#0e0e0e] hover:bg-[#141414] border border-white/10 hover:border-[#800020] rounded-2xl p-5 sm:p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-[#800020]/25 relative">
+                          {/* Desktop Arrow Pointer towards center */}
+                          <div className="hidden md:block absolute top-1/2 -left-2.5 -translate-y-1/2 w-5 h-5 bg-[#0e0e0e] border-b border-l border-white/10 rotate-45" />
+
+                          <div className="flex items-start gap-4">
+                            <div className="w-11 h-11 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-rose-300 group-hover:bg-[#800020] group-hover:text-white transition-colors shrink-0">
+                              <IconComp className="w-5 h-5" />
+                            </div>
+
+                            <div className="space-y-1.5 flex-1">
+                              <span className="text-[11px] font-black uppercase tracking-wider text-rose-400 block">
+                                {step.role}
+                              </span>
+                              <h3 className="text-base sm:text-lg font-bold text-white group-hover:text-rose-100 transition-colors">
+                                {step.title}
+                              </h3>
+                              <p className="text-xs sm:text-sm text-white/60 leading-relaxed pt-0.5">
+                                {step.desc}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 );
               })}
             </div>
           </div>
+
+          {/* Action CTAs */}
+          <div className="pt-6 flex flex-col sm:flex-row items-center justify-center gap-3.5 text-center">
+            <Link
+              to="/portal-warga"
+              className="inline-flex items-center gap-2 bg-[#800020] hover:bg-[#9b1b3b] text-white font-extrabold text-xs uppercase tracking-wider px-7 py-3.5 rounded-xl shadow-lg shadow-[#800020]/40 transition active:scale-95"
+            >
+              <span>Mulai Buat Pengajuan</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+            <Link
+              to="/portal-petugas"
+              className="inline-flex items-center gap-2 bg-white/5 hover:bg-white/10 text-white font-bold text-xs uppercase tracking-wider px-6 py-3.5 rounded-xl border border-white/15 transition"
+            >
+              <span>Portal Petugas Desa</span>
+              <ArrowUpRight className="w-3.5 h-3.5 text-white/60" />
+            </Link>
+          </div>
         </div>
       </section>
+
+      {/* SECTION 4: Dedicated Footer */}
+      <Footer />
     </div>
   );
 }

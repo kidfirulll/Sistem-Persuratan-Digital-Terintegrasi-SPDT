@@ -1,63 +1,5 @@
-// In-memory letter store for demo & tracking purposes
-let letters = [
-  {
-    id: "SPDT-2026-001",
-    trackingNumber: "SPDT-2026-001",
-    letterType: "Surat Keterangan Usaha (SKU)",
-    applicantName: "Haji Ahmad Dahlan",
-    nik: "3201012304650001",
-    date: "2026-10-28",
-    status: "Terbit",
-    currentStage: 5, // 0: Diajukan, 1: RT, 2: RW, 3: Kasun, 4: Kades, 5: Terbit
-    stages: [
-      { name: "Diajukan", role: "Pemohon", status: "completed", timestamp: "28 Okt 2026, 09:15" },
-      { name: "RT", role: "Ketua RT 02", status: "completed", timestamp: "28 Okt 2026, 11:30" },
-      { name: "RW", role: "Ketua RW 05", status: "completed", timestamp: "29 Okt 2026, 14:00" },
-      { name: "Kasun", role: "Kepala Dusun Krajan", status: "completed", timestamp: "30 Okt 2026, 08:45" },
-      { name: "Kades", role: "Kepala Desa (TTE)", status: "completed", timestamp: "31 Okt 2026, 10:20" },
-      { name: "Terbit", role: "Dokumen Siap Unduh", status: "completed", timestamp: "31 Okt 2026, 10:25" }
-    ],
-    notes: "Surat telah ditandatangani secara elektronik (TTE) dan siap diunduh."
-  },
-  {
-    id: "SPDT-2026-002",
-    trackingNumber: "SPDT-2026-002",
-    letterType: "Surat Keterangan Domisili",
-    applicantName: "Siti Aminah",
-    nik: "3201015609800003",
-    date: "2026-10-31",
-    status: "Proses Kasun",
-    currentStage: 3,
-    stages: [
-      { name: "Diajukan", role: "Pemohon", status: "completed", timestamp: "31 Okt 2026, 08:00" },
-      { name: "RT", role: "Ketua RT 01", status: "completed", timestamp: "31 Okt 2026, 10:15" },
-      { name: "RW", role: "Ketua RW 05", status: "completed", timestamp: "31 Okt 2026, 15:30" },
-      { name: "Kasun", role: "Kepala Dusun Krajan", status: "current", timestamp: "Sedang ditelaah" },
-      { name: "Kades", role: "Kepala Desa (TTE)", status: "pending", timestamp: "-" },
-      { name: "Terbit", role: "Dokumen Siap Unduh", status: "pending", timestamp: "-" }
-    ],
-    notes: "Sedang menunggu verifikasi berkas oleh Kepala Dusun."
-  },
-  {
-    id: "SPDT-2026-003",
-    trackingNumber: "SPDT-2026-003",
-    letterType: "Surat Keterangan Tidak Mampu (SKTM)",
-    applicantName: "Bambang Sudarsono",
-    nik: "3201011202720005",
-    date: "2026-11-01",
-    status: "Proses RT",
-    currentStage: 1,
-    stages: [
-      { name: "Diajukan", role: "Pemohon", status: "completed", timestamp: "01 Nov 2026, 07:30" },
-      { name: "RT", role: "Ketua RT 03", status: "current", timestamp: "Menunggu tanda tangan RT" },
-      { name: "RW", role: "Ketua RW 02", status: "pending", timestamp: "-" },
-      { name: "Kasun", role: "Kepala Dusun Barat", status: "pending", timestamp: "-" },
-      { name: "Kades", role: "Kepala Desa (TTE)", status: "pending", timestamp: "-" },
-      { name: "Terbit", role: "Dokumen Siap Unduh", status: "pending", timestamp: "-" }
-    ],
-    notes: "Pengajuan baru diterima, menunggu persetujuan RT setempat."
-  }
-];
+// In-memory letter store for SPDT
+let letters = [];
 
 // GET /api/letters/:id
 export const getLetterById = (req, res) => {
@@ -71,7 +13,7 @@ export const getLetterById = (req, res) => {
   if (!letter) {
     return res.status(404).json({
       success: false,
-      message: `Surat dengan Nomor Resi "${id}" tidak ditemukan. Pastikan nomor resi benar (contoh: SPDT-2026-001).`
+      message: `Surat dengan Nomor Resi "${id}" tidak ditemukan. Pastikan nomor resi benar.`
     });
   }
 
@@ -81,7 +23,7 @@ export const getLetterById = (req, res) => {
   });
 };
 
-// GET /api/letters (get all letters for citizen dashboard)
+// GET /api/letters (get all letters)
 export const getAllLetters = (req, res) => {
   return res.status(200).json({
     success: true,
@@ -116,20 +58,21 @@ export const createLetter = (req, res) => {
     applicantName,
     nik,
     purpose: purpose || "Keperluan Administrasi",
-    address: address || "Dusun Krajan RT 01 / RW 01",
+    address: address || "",
     phone: phone || "-",
     date: dateFormatted,
-    status: "Diajukan",
-    currentStage: 0,
+    status: "Menunggu Verifikasi RT",
+    currentStage: 1, // 1: Giliran RT
+    approvedBy: [],  // Daftar role yang sudah approve: ['rt', 'rw', ...]
     stages: [
       { name: "Diajukan", role: "Pemohon", status: "completed", timestamp: `${dateFormatted}, ${timeFormatted}` },
-      { name: "RT", role: "Ketua RT", status: "current", timestamp: "Menunggu verifikasi" },
+      { name: "RT", role: "Ketua RT", status: "current", timestamp: "Menunggu verifikasi RT" },
       { name: "RW", role: "Ketua RW", status: "pending", timestamp: "-" },
       { name: "Kasun", role: "Kepala Dusun", status: "pending", timestamp: "-" },
       { name: "Kades", role: "Kepala Desa (TTE)", status: "pending", timestamp: "-" },
       { name: "Terbit", role: "Dokumen Siap Unduh", status: "pending", timestamp: "-" }
     ],
-    notes: "Pengajuan berhasil dibuat. Menunggu verifikasi pengurus RT."
+    notes: "Pengajuan baru berhasil dibuat. Menunggu verifikasi pengurus RT."
   };
 
   letters.unshift(newLetter);
@@ -138,5 +81,95 @@ export const createLetter = (req, res) => {
     success: true,
     message: "Pengajuan surat berhasil dikirim!",
     data: newLetter
+  });
+};
+
+// POST /api/letters/:id/approve
+export const approveLetter = (req, res) => {
+  const { id } = req.params;
+  const { officialRole, officialName, note } = req.body;
+  const cleanId = id.trim().toUpperCase();
+
+  const letterIndex = letters.findIndex(
+    (item) => item.id.toUpperCase() === cleanId || item.trackingNumber.toUpperCase() === cleanId
+  );
+
+  if (letterIndex === -1) {
+    return res.status(404).json({
+      success: false,
+      message: "Surat tidak ditemukan."
+    });
+  }
+
+  const letter = letters[letterIndex];
+  const role = (officialRole || "").toLowerCase();
+
+  if (!letter.approvedBy) {
+    letter.approvedBy = [];
+  }
+
+  // Cek apakah role ini sudah pernah approve
+  if (letter.approvedBy.includes(role)) {
+    return res.status(400).json({
+      success: false,
+      message: `Surat ini sudah disetujui oleh ${officialName || role.toUpperCase()}.`
+    });
+  }
+
+  const now = new Date();
+  const dateFormatted = now.toLocaleDateString("id-ID", {
+    year: "numeric",
+    month: "short",
+    day: "numeric"
+  });
+  const timeFormatted = now.toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" });
+  const approvalTimestamp = `${dateFormatted}, ${timeFormatted}`;
+
+  // Alur berjenjang: RT (1) -> RW (2) -> Kasun (3) -> Kades (4) -> Terbit (5)
+  if (role === "rt") {
+    letter.approvedBy.push("rt");
+    letter.currentStage = 2;
+    letter.status = "Menunggu Verifikasi RW";
+    if (letter.stages) {
+      if (letter.stages[1]) { letter.stages[1].status = "completed"; letter.stages[1].timestamp = approvalTimestamp; }
+      if (letter.stages[2]) { letter.stages[2].status = "current"; letter.stages[2].timestamp = "Sedang diproses RW"; }
+    }
+  } else if (role === "rw") {
+    letter.approvedBy.push("rw");
+    letter.currentStage = 3;
+    letter.status = "Menunggu Verifikasi Kasun";
+    if (letter.stages) {
+      if (letter.stages[2]) { letter.stages[2].status = "completed"; letter.stages[2].timestamp = approvalTimestamp; }
+      if (letter.stages[3]) { letter.stages[3].status = "current"; letter.stages[3].timestamp = "Sedang ditelaah Kasun"; }
+    }
+  } else if (role === "kasun") {
+    letter.approvedBy.push("kasun");
+    letter.currentStage = 4;
+    letter.status = "Menunggu TTE Kades";
+    if (letter.stages) {
+      if (letter.stages[3]) { letter.stages[3].status = "completed"; letter.stages[3].timestamp = approvalTimestamp; }
+      if (letter.stages[4]) { letter.stages[4].status = "current"; letter.stages[4].timestamp = "Menunggu penandatanganan Kades"; }
+    }
+  } else if (role === "kades") {
+    letter.approvedBy.push("kades");
+    letter.currentStage = 5;
+    letter.status = "Terbit Sah";
+    if (letter.stages) {
+      if (letter.stages[4]) { letter.stages[4].status = "completed"; letter.stages[4].timestamp = approvalTimestamp; }
+      if (letter.stages[5]) { letter.stages[5].status = "completed"; letter.stages[5].timestamp = approvalTimestamp; }
+    }
+  } else {
+    // Fallback umum
+    letter.approvedBy.push(role);
+    letter.status = "Terbit";
+    letter.currentStage = 5;
+  }
+
+  if (note) letter.notes = note;
+
+  return res.status(200).json({
+    success: true,
+    message: `Dokumen ${letter.trackingNumber} berhasil disetujui & TTE oleh ${officialName || role.toUpperCase()}.`,
+    data: letter
   });
 };

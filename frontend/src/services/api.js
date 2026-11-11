@@ -1,4 +1,4 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5001/api";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "/api";
 
 /**
  * Fetch letter details by tracking number / ID
@@ -13,7 +13,7 @@ export async function getLetterByTrackingId(id) {
     console.error("Error fetching letter by ID:", error);
     return {
       success: false,
-      message: "Gagal terhubung ke server SPDT. Pastikan backend aktif di port 5000."
+      message: "Gagal terhubung ke server SPDT. Pastikan backend aktif."
     };
   }
 }
@@ -56,6 +56,31 @@ export async function submitLetter(letterData) {
     return {
       success: false,
       message: "Gagal mengirimkan permohonan surat. Silakan coba kembali."
+    };
+  }
+}
+
+/**
+ * Approve and sign (TTE) a letter at a specific official role
+ * @param {string} id - Letter tracking number
+ * @param {Object} payload - { officialRole, officialName, note }
+ */
+export async function approveLetterTTE(id, payload = {}) {
+  try {
+    const res = await fetch(`${API_BASE_URL}/letters/${encodeURIComponent(id)}/approve`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.error("Error approving letter:", error);
+    return {
+      success: false,
+      message: "Gagal memproses persetujuan TTE. Silakan coba kembali."
     };
   }
 }

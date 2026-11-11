@@ -1,6 +1,11 @@
 import express from "express";
+import path from "path";
+import { fileURLToPath } from "url";
 import cors from "cors";
 import letterRoutes from "./routes/letters.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 5001;
@@ -22,15 +27,20 @@ app.get("/api/health", (req, res) => {
 // Letter Routes
 app.use("/api/letters", letterRoutes);
 
-// Root route
-app.get("/", (req, res) => {
-  res.send("SPDT API Server is running. Access letter endpoints via /api/letters");
+// Serve Frontend Static Files (from frontend/dist)
+const frontendDistPath = path.resolve(__dirname, "../frontend/dist");
+app.use(express.static(frontendDistPath));
+
+// SPA Catch-all: kirim index.html untuk semua route selain /api
+app.get("*", (req, res) => {
+  res.sendFile(path.join(frontendDistPath, "index.html"));
 });
 
-// Start Server
-app.listen(PORT, () => {
+// Start Server (listening on 0.0.0.0 agar bisa diakses Tailscale dan LAN)
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`===============================================`);
-  console.log(` SPDT Backend Server is running on port ${PORT}`);
-  console.log(` API URL: http://localhost:${PORT}/api/letters`);
+  console.log(` SPDT Full-Stack Server is running on port ${PORT}`);
+  console.log(` Local URL     : http://localhost:${PORT}`);
+  console.log(` Tailscale URL : http://100.90.63.47:${PORT}`);
   console.log(`===============================================`);
 });

@@ -7,6 +7,19 @@ export default {
   theme: {
     extend: {
       colors: {
+        burgundy: {
+          50: '#fdf2f4',
+          100: '#fbe6e9',
+          200: '#f7cfd6',
+          300: '#f0aab7',
+          400: '#e5778e',
+          500: '#d54868',
+          600: '#b82749',
+          700: '#9b1b3b',
+          800: '#800020', // Classic Burgundy #800020
+          900: '#6D001A', // Deep Burgundy #6D001A
+          950: '#42000e',
+        },
         navy: {
           800: '#1e293b',
           900: '#0f172a',

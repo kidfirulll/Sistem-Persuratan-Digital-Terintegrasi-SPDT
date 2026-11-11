@@ -3,7 +3,26 @@
 @tailwind utilities;
 
 @layer base {
-  body {
-    @apply text-slate-800 bg-white selection:bg-blue-100 selection:text-blue-900;
+  html {
+    scroll-behavior: smooth;
   }
+  body {
+    @apply text-white bg-black selection:bg-[#800020] selection:text-white antialiased font-sans;
+  }
+}
+
+/* Custom animations & interactive scroll snap */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }

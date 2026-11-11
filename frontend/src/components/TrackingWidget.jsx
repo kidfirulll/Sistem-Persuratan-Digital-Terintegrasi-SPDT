@@ -1,14 +1,28 @@
 import React, { useState } from "react";
-import { Search, CheckCircle2, Clock, AlertCircle, FileCheck2, ArrowRight } from "lucide-react";
+import { 
+  Search, 
+  AlertCircle, 
+  CheckCircle2, 
+  Clock, 
+  FileText, 
+  QrCode, 
+  Sparkles, 
+  ArrowRight,
+  ShieldCheck,
+  Check,
+  Calendar,
+  User,
+  Fingerprint
+} from "lucide-react";
 import { getLetterByTrackingId } from "../services/api";
 
 const STAGES = [
   { key: "diajukan", label: "Diajukan", role: "Pemohon" },
-  { key: "rt", label: "RT", role: "Pengantar RT" },
-  { key: "rw", label: "RW", role: "Verifikasi RW" },
-  { key: "kasun", label: "Kasun", role: "Kepala Dusun" },
-  { key: "kades", label: "Kades", role: "TTE Kades" },
-  { key: "terbit", label: "Terbit", role: "Dokumen Sah" }
+  { key: "rt", label: "Pengantar RT", role: "Ketua RT" },
+  { key: "rw", label: "Validasi RW", role: "Ketua RW" },
+  { key: "kasun", label: "Audit Dusun", role: "Kasun" },
+  { key: "kades", label: "TTE Kades", role: "Kepala Desa" },
+  { key: "terbit", label: "Terbit Sah", role: "BSrE Certified" }
 ];
 
 export default function TrackingWidget({ initialId = "" }) {
@@ -35,295 +49,189 @@ export default function TrackingWidget({ initialId = "" }) {
       setResult(response.data);
     } else {
       setErrorMsg(
-        response?.message || "Nomor Resi tidak ditemukan. Pastikan format nomor resi benar."
+        response?.message || "Nomor Resi tidak ditemukan dalam basis data."
       );
     }
   };
 
-  const handleQuickFill = (code) => {
-    setTrackingNumber(code);
-    fetchQuick(code);
-  };
-
-  const fetchQuick = async (code) => {
-    setLoading(true);
-    setErrorMsg("");
-    setResult(null);
-    const response = await getLetterByTrackingId(code);
-    setLoading(false);
-    if (response && response.success) {
-      setResult(response.data);
-    } else {
-      setErrorMsg(response?.message || "Nomor resi tidak ditemukan.");
-    }
-  };
-
   return (
-    <div className="w-full bg-white rounded-2xl sm:rounded-3xl border border-slate-200/90 shadow-xs p-4 sm:p-7 transition-all">
-      <div className="max-w-2xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-4 sm:mb-6">
-          <span className="inline-block px-2.5 py-0.5 bg-blue-50 text-blue-700 text-[11px] sm:text-xs font-bold rounded-full border border-blue-200/60 mb-2">
-            Lacak Real-Time
-          </span>
-          <h2 className="text-lg sm:text-2xl font-black text-slate-900 tracking-tight">
-            Pantau Status Surat Desa
+    <div className="w-full relative py-12 sm:py-20 px-4 sm:px-8 overflow-hidden flex flex-col justify-center items-center">
+      {/* BACKGROUND PATTERN / CORAK:
+          Subtle geometric dot-grid & radial Burgundy glow matrix overlay */}
+      <div 
+        className="absolute inset-0 pointer-events-none opacity-[0.035] dark:opacity-[0.05]" 
+        style={{
+          backgroundImage: `radial-gradient(#800020 1.5px, transparent 1.5px), radial-gradient(#000000 1.5px, transparent 1.5px)`,
+          backgroundSize: '24px 24px',
+          backgroundPosition: '0 0, 12px 12px'
+        }}
+      />
+      {/* Decorative Diagonal Stripes Pattern Accent */}
+      <div className="absolute -top-32 -right-32 w-96 h-96 bg-gradient-to-br from-[#800020]/15 to-transparent rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute -bottom-32 -left-32 w-96 h-96 bg-gradient-to-tr from-rose-950/15 to-transparent rounded-full blur-3xl pointer-events-none" />
+
+      {/* Decorative Ambient Circuit Lines */}
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-black/10 to-transparent" />
+      <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-black/10 to-transparent" />
+
+      <div className="max-w-4xl w-full mx-auto relative z-10 flex flex-col justify-center items-center">
+        {/* Header Title with High-Contrast Typography */}
+        <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-10 space-y-3">
+          <div className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-[#800020]">
+            <Fingerprint className="w-4 h-4 text-[#800020]" />
+            <span>Sistem Pelacakan Berkas Terintegrasi</span>
+          </div>
+
+          <h2 className="text-3xl sm:text-5xl lg:text-6xl font-black text-black tracking-tight leading-tight">
+            Pantau Status Berkas Desa
           </h2>
-          <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-sm mx-auto">
-            Masukkan Nomor Resi yang Anda peroleh saat pengajuan berkas.
+
+          <p className="text-sm sm:text-base text-black/60 font-medium leading-relaxed">
+            Ketik nomor resi Anda untuk melihat progres penandatanganan dan validasi berjenjang secara live dari perangkat Anda.
           </p>
         </div>
 
-        {/* Search Bar - Seamless on Small Screen */}
-        <form onSubmit={handleSearch} className="mb-2.5">
-          <div className="flex flex-col sm:flex-row items-stretch gap-2">
-            <div className="relative flex-1">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
-                <Search className="w-4 h-4" />
+        {/* HIGH-IMPACT PROMINENT SEARCH CONSOLE */}
+        <div className="w-full max-w-2xl mx-auto mb-8">
+          <form 
+            onSubmit={handleSearch} 
+            className="group relative bg-white p-2.5 sm:p-3 rounded-2xl sm:rounded-3xl border-2 border-black/15 hover:border-[#800020] focus-within:border-[#800020] focus-within:ring-4 focus-within:ring-[#800020]/15 shadow-2xl shadow-[#800020]/10 transition-all duration-300"
+          >
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+              <div className="flex items-center pl-4 pr-2 flex-1">
+                <Search className="w-6 h-6 text-[#800020] shrink-0 mr-3 group-focus-within:scale-110 transition-transform" />
+                <input
+                  type="text"
+                  value={trackingNumber}
+                  onChange={(e) => setTrackingNumber(e.target.value)}
+                  placeholder="Masukkan Nomor Resi (misal: SPDT-2026-001)"
+                  className="w-full py-3 text-base sm:text-lg font-bold text-black bg-transparent outline-none placeholder:text-black/35 tracking-wide"
+                />
               </div>
-              <input
-                type="text"
-                value={trackingNumber}
-                onChange={(e) => setTrackingNumber(e.target.value)}
-                placeholder="Contoh: SPDT-2026-001"
-                className="w-full pl-9 pr-3 py-2.5 text-xs sm:text-sm text-slate-900 bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-100 transition placeholder:text-slate-400"
-              />
-            </div>
-            <button
-              type="submit"
-              disabled={loading}
-              className="bg-blue-600 hover:bg-blue-700 active:bg-blue-800 disabled:bg-blue-400 text-white font-bold text-xs sm:text-sm px-5 py-2.5 rounded-xl shadow-2xs transition flex items-center justify-center gap-1.5 cursor-pointer shrink-0"
-            >
-              {loading ? (
-                <span>Mencari...</span>
-              ) : (
-                <>
-                  <span>Lacak Surat</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </>
-              )}
-            </button>
-          </div>
-        </form>
 
-        {/* Quick Sample Numbers - Mobile horizontal scrolling pills */}
-        <div className="flex items-center gap-1.5 text-[11px] sm:text-xs text-slate-500 overflow-x-auto pb-1 mb-4 no-scrollbar">
-          <span className="text-slate-400 shrink-0">Coba nomor:</span>
-          <button
-            type="button"
-            onClick={() => handleQuickFill("SPDT-2026-001")}
-            className="font-medium text-blue-700 bg-blue-50 hover:bg-blue-100 px-2.5 py-1 rounded-lg border border-blue-200/80 shrink-0 transition"
-          >
-            SPDT-2026-001 (Terbit)
-          </button>
-          <button
-            type="button"
-            onClick={() => handleQuickFill("SPDT-2026-002")}
-            className="font-medium text-blue-700 bg-blue-50 hover:bg-blue-100 px-2.5 py-1 rounded-lg border border-blue-200/80 shrink-0 transition"
-          >
-            SPDT-2026-002 (Kasun)
-          </button>
-          <button
-            type="button"
-            onClick={() => handleQuickFill("SPDT-2026-003")}
-            className="font-medium text-blue-700 bg-blue-50 hover:bg-blue-100 px-2.5 py-1 rounded-lg border border-blue-200/80 shrink-0 transition"
-          >
-            SPDT-2026-003 (RT)
-          </button>
+              <button
+                type="submit"
+                disabled={loading}
+                className="bg-[#800020] hover:bg-[#9b1b3b] active:scale-95 disabled:opacity-50 text-white font-extrabold text-xs uppercase tracking-widest px-8 py-4 rounded-xl sm:rounded-2xl shadow-xl shadow-[#800020]/30 hover:shadow-[#800020]/50 transition-all duration-300 cursor-pointer flex items-center justify-center gap-2 shrink-0"
+              >
+                {loading ? (
+                  <span>Mencari...</span>
+                ) : (
+                  <>
+                    <span>Lacak Sekarang</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </>
+                )}
+              </button>
+            </div>
+          </form>
+
+          {/* Quick Helper Subtext */}
+          <div className="flex items-center justify-between text-[11px] text-black/50 px-3 pt-2 font-medium">
+            <span>Contoh: SPDT-2026-001</span>
+            <span>Update langsung dari database desa</span>
+          </div>
         </div>
 
-        {/* Error Alert */}
+        {/* Error Feedback Message */}
         {errorMsg && (
-          <div className="p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 flex items-start gap-2 mb-4 text-xs sm:text-sm">
-            <AlertCircle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
-            <div>
-              <p className="font-bold">Resi Tidak Ditemukan</p>
-              <p className="text-amber-800 mt-0.5">{errorMsg}</p>
+          <div className="max-w-2xl mx-auto w-full mb-6 p-4 rounded-2xl bg-rose-50 border-2 border-rose-200 text-rose-950 text-xs sm:text-sm flex items-center justify-between gap-3 animate-fade-in shadow-md">
+            <div className="flex items-center gap-2.5">
+              <AlertCircle className="w-5 h-5 text-rose-700 shrink-0" />
+              <p className="font-semibold">{errorMsg}</p>
             </div>
+            <button
+              type="button"
+              onClick={() => setErrorMsg("")}
+              className="text-xs font-bold text-rose-700 hover:text-black p-1"
+            >
+              Tutup
+            </button>
           </div>
         )}
 
-        {/* Tracking Result Card */}
+        {/* RESULT TRACKING CARD (INTERACTIVE MODERN TIMELINE) */}
         {result && (
-          <div className="border border-blue-100 bg-slate-50/70 rounded-2xl p-3.5 sm:p-5 mt-3">
-            {/* Header info */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-slate-200 gap-2">
-              <div>
-                <span className="text-[10px] uppercase tracking-wider font-bold text-slate-400">
-                  Nomor Resi Pelayanan
-                </span>
-                <h3 className="text-base sm:text-lg font-black text-slate-900 tracking-tight">
+          <div className="max-w-3xl w-full mx-auto bg-white border-2 border-black/10 hover:border-[#800020]/40 rounded-3xl p-6 sm:p-9 shadow-2xl space-y-6 transition-all duration-300 relative overflow-hidden animate-fade-in">
+            {/* Ambient Watermark Pattern */}
+            <div className="absolute -bottom-10 -right-10 w-44 h-44 bg-[#800020]/5 rounded-full pointer-events-none" />
+
+            {/* Document Header Identity */}
+            <div className="flex flex-col sm:flex-row sm:items-start justify-between pb-5 border-b-2 border-black/10 gap-4">
+              <div className="space-y-1">
+                <span className="font-mono text-2xl font-black text-[#800020] tracking-wider block">
                   {result.trackingNumber}
-                </h3>
-                <p className="text-xs font-semibold text-slate-700 mt-0.5">
+                </span>
+                <h3 className="text-xl font-black text-black">
                   {result.letterType}
+                </h3>
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-black/60 pt-1">
+                  <span>
+                    Pemohon: <strong className="text-black">{result.applicantName}</strong>
+                  </span>
+                  <span>
+                    NIK: <strong className="text-black font-mono">{result.nik}</strong>
+                  </span>
+                </div>
+              </div>
+
+              <div className="sm:text-right space-y-1">
+                <span className="text-xs font-extrabold uppercase tracking-wider px-3.5 py-1.5 rounded-full bg-[#800020] text-white shadow-md shadow-[#800020]/30 inline-block">
+                  Status: {result.status}
+                </span>
+                <p className="text-xs text-black/40 font-medium">
+                  Tanggal Pengajuan: {result.date}
                 </p>
               </div>
-
-              <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-start gap-1">
-                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] sm:text-xs font-bold bg-blue-600 text-white shadow-2xs">
-                  {result.status}
-                </span>
-                <span className="text-[11px] text-slate-500">
-                  Diajukan: {result.date}
-                </span>
-              </div>
             </div>
 
-            {/* Applicant details */}
-            <div className="py-2.5 text-xs text-slate-600 flex flex-wrap gap-x-4 gap-y-1 border-b border-slate-200">
-              <p>Pemohon: <span className="font-bold text-slate-900">{result.applicantName}</span></p>
-              <p>NIK: <span className="font-bold text-slate-900">{result.nik}</span></p>
-            </div>
+            {/* Interactive Step-by-Step Progress Ribbon */}
+            <div className="space-y-2">
+              <span className="text-[11px] font-black uppercase tracking-wider text-black/40 block">
+                Progres Validasi Berjenjang:
+              </span>
 
-            {/* Mobile-Optimized Timeline Display */}
-            <div className="py-4">
-              <p className="text-xs font-bold text-slate-800 mb-3">
-                Tahapan Verifikasi Berjenjang:
-              </p>
-
-              {/* Mobile Timeline: Vertical Stepper on small screens, Horizontal on tablet/desktop */}
-              <div className="space-y-2 sm:hidden">
-                {STAGES.map((stg, index) => {
-                  const isPassed = index < result.currentStage;
-                  const isCurrent = index === result.currentStage;
-                  const stageDetail = result.stages ? result.stages[index] : null;
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 pt-1">
+                {STAGES.map((stg, i) => {
+                  const stageIndex = result.currentStage ?? 0;
+                  const isPassed = i <= stageIndex;
+                  const isCurrent = i === stageIndex;
 
                   return (
                     <div
                       key={stg.key}
-                      className={`flex items-center gap-3 p-2.5 rounded-xl border transition ${
+                      className={`p-3 rounded-2xl border-2 text-center transition-all duration-300 flex flex-col justify-between ${
                         isCurrent
-                          ? "bg-blue-50 border-blue-400 shadow-2xs"
+                          ? "bg-[#800020] border-[#800020] text-white shadow-lg shadow-[#800020]/30 scale-[1.03]"
                           : isPassed
-                          ? "bg-white border-slate-200"
-                          : "bg-slate-50/40 border-slate-200/60 opacity-60"
+                          ? "bg-rose-50/80 border-[#800020]/30 text-[#800020]"
+                          : "bg-zinc-50 border-black/10 text-black/40"
                       }`}
                     >
-                      <div
-                        className={`w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs shrink-0 ${
-                          isPassed
-                            ? "bg-emerald-600 text-white"
-                            : isCurrent
-                            ? "bg-blue-600 text-white ring-2 ring-blue-200"
-                            : "bg-slate-200 text-slate-500"
-                        }`}
-                      >
-                        {isPassed ? (
-                          <CheckCircle2 className="w-4 h-4" />
-                        ) : isCurrent ? (
-                          <Clock className="w-4 h-4 animate-spin-slow" />
-                        ) : (
-                          <span>{index + 1}</span>
-                        )}
-                      </div>
-
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center justify-between">
-                          <span
-                            className={`text-xs font-bold ${
-                              isCurrent ? "text-blue-700" : isPassed ? "text-slate-900" : "text-slate-500"
-                            }`}
-                          >
-                            {stg.label} ({stg.role})
-                          </span>
-                          {isCurrent && (
-                            <span className="text-[10px] bg-blue-600 text-white px-2 py-0.5 rounded-full font-bold">
-                              Proses
-                            </span>
-                          )}
-                        </div>
-                        {stageDetail?.timestamp && stageDetail.timestamp !== "-" && (
-                          <p className="text-[10px] text-slate-500 mt-0.5">
-                            {stageDetail.timestamp}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-
-              {/* Tablet/Desktop Horizontal Grid */}
-              <div className="hidden sm:grid sm:grid-cols-6 gap-1.5">
-                {STAGES.map((stg, index) => {
-                  const isPassed = index < result.currentStage;
-                  const isCurrent = index === result.currentStage;
-                  const stageDetail = result.stages ? result.stages[index] : null;
-
-                  return (
-                    <div
-                      key={stg.key}
-                      className={`flex flex-col items-center text-center p-2 rounded-xl border transition ${
-                        isCurrent
-                          ? "bg-blue-50 border-blue-400 shadow-2xs"
-                          : isPassed
-                          ? "bg-white border-slate-200"
-                          : "bg-slate-50/50 border-slate-200/60 opacity-60"
-                      }`}
-                    >
-                      <div
-                        className={`w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs mb-1.5 ${
-                          isPassed
-                            ? "bg-emerald-600 text-white"
-                            : isCurrent
-                            ? "bg-blue-600 text-white ring-2 ring-blue-200"
-                            : "bg-slate-200 text-slate-500"
-                        }`}
-                      >
-                        {isPassed ? (
-                          <CheckCircle2 className="w-4 h-4" />
-                        ) : isCurrent ? (
-                          <Clock className="w-4 h-4 animate-spin-slow" />
-                        ) : (
-                          <span>{index + 1}</span>
-                        )}
-                      </div>
-
-                      <span
-                        className={`text-xs font-bold leading-tight ${
-                          isCurrent
-                            ? "text-blue-700"
-                            : isPassed
-                            ? "text-slate-900"
-                            : "text-slate-400"
-                        }`}
-                      >
+                      <span className={`text-[10px] font-mono font-black block ${isCurrent ? "text-white" : "text-black/40"}`}>
+                        0{i + 1}
+                      </span>
+                      <span className={`text-xs font-black block truncate my-1 ${isCurrent ? "text-white" : isPassed ? "text-[#800020]" : "text-black/60"}`}>
                         {stg.label}
                       </span>
-                      <span className="text-[10px] text-slate-500 mt-0.5">
+                      <span className={`text-[9px] font-bold block truncate ${isCurrent ? "text-rose-200" : "text-black/40"}`}>
                         {stg.role}
                       </span>
-
-                      {stageDetail?.timestamp && stageDetail.timestamp !== "-" && (
-                        <span className="text-[9px] text-blue-600 font-medium mt-1 leading-tight line-clamp-1">
-                          {stageDetail.timestamp}
-                        </span>
-                      )}
                     </div>
                   );
                 })}
               </div>
             </div>
 
-            {/* Note & Download action */}
-            <div className="bg-white rounded-xl p-3 border border-slate-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 text-xs">
-              <div className="text-slate-600">
-                <span className="font-bold text-slate-800">Catatan: </span>
-                {result.notes || "Pengajuan Anda dalam proses verifikasi pihak desa."}
+            {/* Notes / Legal Footprint */}
+            {result.notes && (
+              <div className="bg-zinc-50 p-4 rounded-2xl border border-black/10 text-xs text-black/80 space-y-1">
+                <span className="font-extrabold text-black uppercase tracking-wider text-[10px] block">
+                  Catatan Verifikator Desa:
+                </span>
+                <p className="leading-relaxed">{result.notes}</p>
               </div>
-
-              {result.currentStage >= 5 && (
-                <button
-                  type="button"
-                  onClick={() => alert(`Mengunduh dokumen surat resmi bertanda tangan elektronik (${result.trackingNumber})`)}
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-3.5 py-2 rounded-xl shadow-2xs transition shrink-0 cursor-pointer"
-                >
-                  <FileCheck2 className="w-4 h-4" />
-                  <span>Unduh Surat (PDF)</span>
-                </button>
-              )}
-            </div>
+            )}
           </div>
         )}
       </div>
